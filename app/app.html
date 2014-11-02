@@ -19,17 +19,14 @@
 
 <template name="tap">
     <li class="tap">
-        <p>{{num}}</p>
-        <p>{{beer.beer_name}}</p>
-      {{> autocompleteSearch}}
-    </li>
-</template>
+        <p>{{tap.num}}</p>
+        <p>{{tap.beer.beer_name}}</p>
 
-<template name="autocompleteSearch">
-    <input type="text" name="name" class="search"/>
-    <ul>
-      {{#each autocomplete}}
-          <li><a href>{{beer.beer_name}}</a></li>
-      {{/each}}
-    </ul>
+        <input type="text" name="name" class="search"/>
+        <ul>
+          {{#each autocomplete}}
+              <li><a href>{{beer.beer_name}}</a></li>
+          {{/each}}
+        </ul>
+    </li>
 </template>

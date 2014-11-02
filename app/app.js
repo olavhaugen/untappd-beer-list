@@ -1,5 +1,4 @@
 var currentTap = null;
-AutoComplete = new Mongo.Collection();
 Taps = new Mongo.Collection('taps');
 
 if (Meteor.isClient) {
@@ -8,7 +7,14 @@ if (Meteor.isClient) {
 
   Template.body.helpers({
     taps: function () {
-      return Taps.find({}, {sort: {num: 1}});
+      return Taps.find({}, {sort: {num: 1}}).map(function (tap) {
+        var searchResults = new Mongo.Collection(null); 
+        return {
+          tap: tap,
+          searchResults: searchResults,
+          autocomplete: searchResults.find()
+        }
+      });
     }
   });
 
@@ -20,13 +26,17 @@ if (Meteor.isClient) {
 
   Template.tap.events({
     'keyup .search': function(event){
-      untappd.search(event.target.value)
-        .then(function(results){
-          results.items.forEach(function(res){
-            AutoComplete.insert(res);
+      var tapWrapper = this;
+      tapWrapper.searchResults.remove({});
+      if (!event.target.value) {
+        return;
+      }
+      untappd.search(event.target.value).then(function(results){
+          results.items.forEach(function (res) {
+            tapWrapper.searchResults.insert(res);
           });
-        })
-      currentTap = this;
+      });
+      currentTap = tapWrapper.tap;
     },
     'submit .new-beer': function (event) {
       var name = event.target.name.value;
@@ -40,17 +50,10 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.autocompleteSearch.helpers({
-    autocomplete: function (){
-      return AutoComplete.find();
-    }
-  });
-
-  Template.autocompleteSearch.events({
+  Template.tap.events({
     'click a': function (event){
       var bid = this.beer.bid;
-      untappd.beerInfo(bid)
-        .then(function (beer){
+        untappd.beerInfo(bid).then(function (beer){
           Taps.update({
             _id: currentTap._id
           }, {$set: {
@@ -58,9 +61,7 @@ if (Meteor.isClient) {
           }});
 
           currentTap = null;
-        })
-
-      AutoComplete.remove({});
+        });
       return false;
     }
   })
