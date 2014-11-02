@@ -6,19 +6,13 @@
 <header>
     <h1>Beers</h1>
 </header>
+{{> findBeer}}
+
 <div>
     <ul>
-        {{#each taps}}
-            {{> tap}}
-        {{/each}}
-    </ul>
-</div>
-
-<div style="clear:both;">
-    <ul>
-        {{#each beers}}
-            {{> beerListTemplate }}
-        {{/each}}
+      {{#each taps}}
+        {{> tap}}
+      {{/each}}
     </ul>
 </div>
 </body>
@@ -26,26 +20,14 @@
 <template name="tap">
     <li class="tap">
         <p>{{num}}</p>
-        {{#with beer num}}
-            {{> beerTemplate}}
-        {{/with}}
-        <form class="new-beer">
-            <input type="text" name="name"/>
-        </form>
 
+        <p>Name: {{beer.name}}</p>
+        <input type="text" name="name" class="search"/>
     </li>
 </template>
 
-
-<template name="beerTemplate">
-    <li>
-        <p>N: {{name}}</p>
-    </li>
-</template>
-
-
-<template name="beerListTemplate">
-    <li>
-        <p>N: {{name}} {{_id}}</p>
-    </li>
+<template name="findBeer">
+  {{#each autocomplete}}
+      <a href data-id="{{id}}">{{name}}</a>
+  {{/each}}
 </template>

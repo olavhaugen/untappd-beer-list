@@ -1,3 +1,5 @@
+var currentTap = null;
+AutoComplete = new Mongo.Collection();
 Taps = new Mongo.Collection('taps');
 
 if (Meteor.isClient) {
@@ -13,12 +15,14 @@ if (Meteor.isClient) {
     }
   })
 
-  Template.tap.helpers({
-    beer: function (){
-      return {name: 'Dahls'};
-    }
-  });
   Template.tap.events({
+    'keyup .search': function(event){
+      currentTap = this;
+      AutoComplete.insert({id: 3, name: 'hello ' + event.target.value});
+      AutoComplete.insert({id: 4, name: 'hello ' + event.target.value});
+      AutoComplete.insert({id: 1, name: 'hello ' + event.target.value});
+      AutoComplete.insert({id: 5, name: 'hello ' + event.target.value});
+    },
     'submit .new-beer': function (event) {
       console.log(this);
       var name = event.target.name.value;
@@ -31,11 +35,31 @@ if (Meteor.isClient) {
       return false;
     }
   });
+
+  Template.findBeer.helpers({
+    autocomplete: function (){
+      return AutoComplete.find();
+    }
+  });
+
+  Template.findBeer.events({
+    'click a': function (event){
+      var beerId = event.target.getAttribute('data-id'),
+        beer = AutoComplete.findOne({id: parseInt(beerId)});
+      Taps.update({
+        _id: currentTap._id
+      }, {$set: {
+        beer: beer
+      }});
+      AutoComplete.remove({});
+      currentTap = null;
+      return false;
+    }
+  })
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    console.log(Taps.find().count());
     if (Taps.find().count() === 0) {
       for (var i = 1; i <= 5; i++) {
         Taps.insert({num: i, beer: null});
