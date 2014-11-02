@@ -3,6 +3,8 @@ AutoComplete = new Mongo.Collection();
 Taps = new Mongo.Collection('taps');
 
 if (Meteor.isClient) {
+  var untappd = new Untappd();
+  untappd.authenticate();
   Template.body.helpers({
     taps: function () {
       return Taps.find();
