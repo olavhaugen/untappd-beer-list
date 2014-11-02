@@ -5,6 +5,7 @@ Taps = new Mongo.Collection('taps');
 if (Meteor.isClient) {
   var untappd = new Untappd();
   untappd.authenticate();
+
   Template.body.helpers({
     taps: function () {
       return Taps.find();
@@ -19,14 +20,15 @@ if (Meteor.isClient) {
 
   Template.tap.events({
     'keyup .search': function(event){
+      untappd.search(event.target.value)
+        .then(function(results){
+          results.items.forEach(function(res){
+            AutoComplete.insert(res);
+          });
+        })
       currentTap = this;
-      AutoComplete.insert({id: 3, name: 'hello ' + event.target.value});
-      AutoComplete.insert({id: 4, name: 'hello ' + event.target.value});
-      AutoComplete.insert({id: 1, name: 'hello ' + event.target.value});
-      AutoComplete.insert({id: 5, name: 'hello ' + event.target.value});
     },
     'submit .new-beer': function (event) {
-      console.log(this);
       var name = event.target.name.value;
       Beers.insert({
         name: name,
@@ -46,15 +48,15 @@ if (Meteor.isClient) {
 
   Template.findBeer.events({
     'click a': function (event){
-      var beerId = event.target.getAttribute('data-id'),
-        beer = AutoComplete.findOne({id: parseInt(beerId)});
       Taps.update({
         _id: currentTap._id
       }, {$set: {
-        beer: beer
+        beer: this.beer
       }});
+
       AutoComplete.remove({});
       currentTap = null;
+      event.target.value = '';
       return false;
     }
   })

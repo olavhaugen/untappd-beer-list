@@ -21,13 +21,13 @@
     <li class="tap">
         <p>{{num}}</p>
 
-        <p>Name: {{beer.name}}</p>
+        <p>Name: {{beer.beer_name}}</p>
         <input type="text" name="name" class="search"/>
     </li>
 </template>
 
 <template name="findBeer">
   {{#each autocomplete}}
-      <a href data-id="{{id}}">{{name}}</a>
+      item: <a href>{{beer.beer_name}}</a><br/>
   {{/each}}
 </template>
