@@ -8,7 +8,7 @@ if (Meteor.isClient) {
 
   Template.body.helpers({
     taps: function () {
-      return Taps.find();
+      return Taps.find({}, {sort: {num: 1}});
     }
   });
 
@@ -40,23 +40,27 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.findBeer.helpers({
+  Template.autocompleteSearch.helpers({
     autocomplete: function (){
       return AutoComplete.find();
     }
   });
 
-  Template.findBeer.events({
+  Template.autocompleteSearch.events({
     'click a': function (event){
-      Taps.update({
-        _id: currentTap._id
-      }, {$set: {
-        beer: this.beer
-      }});
+      var bid = this.beer.bid;
+      untappd.beerInfo(bid)
+        .then(function (beer){
+          Taps.update({
+            _id: currentTap._id
+          }, {$set: {
+            beer: beer
+          }});
+
+          currentTap = null;
+        })
 
       AutoComplete.remove({});
-      currentTap = null;
-      event.target.value = '';
       return false;
     }
   })

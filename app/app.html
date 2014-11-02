@@ -6,7 +6,7 @@
 <header>
     <h1>Beers</h1>
 </header>
-{{> findBeer}}
+
 
 <div>
     <ul>
@@ -20,14 +20,16 @@
 <template name="tap">
     <li class="tap">
         <p>{{num}}</p>
-
-        <p>Name: {{beer.beer_name}}</p>
-        <input type="text" name="name" class="search"/>
+        <p>{{beer.beer_name}}</p>
+      {{> autocompleteSearch}}
     </li>
 </template>
 
-<template name="findBeer">
-  {{#each autocomplete}}
-      item: <a href>{{beer.beer_name}}</a><br/>
-  {{/each}}
+<template name="autocompleteSearch">
+    <input type="text" name="name" class="search"/>
+    <ul>
+      {{#each autocomplete}}
+          <li><a href>{{beer.beer_name}}</a></li>
+      {{/each}}
+    </ul>
 </template>

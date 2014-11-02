@@ -16,6 +16,15 @@
         });
     };
 
+    Untappd.prototype.beerInfo = function (bid) {
+      var url = apiUrlBase + '/beer/info/'+bid+'?access_token=' + accessToken;
+      return jQuery.getJSON(url)
+        .then(function(data){
+          console.log(data);
+          return data.response.beer;
+        });
+    };
+
     Untappd.prototype.getRecentCheckins = function () {
       var url = apiUrlBase + '/user/checkins?access_token=' + accessToken;
       return jQuery.getJSON(url);
