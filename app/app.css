@@ -1,0 +1,23 @@
+/* CSS declarations go here */
+html, body, h1, h2, h3, h4, ul, ol, li, p, a {
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+
+ul {
+	list-style-type: none;
+}
+li.tap {
+	border: 1px solid black;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	float:left;
+	height: 4rem;
+	width: 6rem;
+}
+
+li input {
+
+	width: 5rem;
+}

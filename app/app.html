@@ -1,0 +1,51 @@
+<head>
+    <title>Beer list</title>
+</head>
+
+<body>
+<header>
+    <h1>Beers</h1>
+</header>
+<div>
+    <ul>
+        {{#each taps}}
+            {{> tap}}
+        {{/each}}
+    </ul>
+</div>
+
+<div style="clear:both;">
+    <ul>
+        {{#each beers}}
+            {{> beerListTemplate }}
+        {{/each}}
+    </ul>
+</div>
+</body>
+
+<template name="tap">
+    <li class="tap">
+        <p>{{num}}</p>
+        {{#with beer num}}
+            {{> beerTemplate}}
+        {{/with}}
+        <form class="new-beer">
+            <input type="text" name="name"/>
+        </form>
+
+    </li>
+</template>
+
+
+<template name="beerTemplate">
+    <li>
+        <p>N: {{name}}</p>
+    </li>
+</template>
+
+
+<template name="beerListTemplate">
+    <li>
+        <p>N: {{name}} {{_id}}</p>
+    </li>
+</template>
